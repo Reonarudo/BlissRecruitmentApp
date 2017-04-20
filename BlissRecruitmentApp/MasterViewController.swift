@@ -15,8 +15,12 @@ class MasterViewController: UITableViewController {
 
 
     override func viewDidLoad() {
+        //Go to loading screen before loading the master view
+        showLoadingView()
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
+        
         navigationItem.leftBarButtonItem = editButtonItem
 
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject(_:)))
@@ -29,7 +33,11 @@ class MasterViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
+        if (navigationController?.navigationBar.isHidden)! {
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+        }
         super.viewWillAppear(animated)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,6 +63,10 @@ class MasterViewController: UITableViewController {
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
+    }
+    
+    func showLoadingView(){
+            self.performSegue(withIdentifier: "segueLoadingScreen", sender: nil)
     }
 
     // MARK: - Table View
