@@ -1,0 +1,6 @@
+framework module Pods_BlissRecruitmentApp {
+  umbrella header "Pods-BlissRecruitmentApp-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -10,16 +10,32 @@ import UIKit
 
 class DetailViewController: UIViewController {
 
-    @IBOutlet weak var detailDescriptionLabel: UILabel!
-
+    @IBOutlet weak var detailQuestionLabel: UILabel!
+    @IBOutlet weak var detailQuestionImage: UIImageView!
+    @IBOutlet weak var detailQuestionPublicationLabel: UILabel!
+    @IBOutlet weak var votingView: UIView!
 
     func configureView() {
         // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail.description
+        if let title = detailQuestion?.question {
+            if let label = detailQuestionLabel {
+                label.text = title
             }
         }
+        
+        if let date = detailQuestion?.publishDate {
+            if let label = detailQuestionPublicationLabel {
+                label.text = "Published on: \(date)"
+            }
+        }
+        
+        if let imageURL = detailQuestion?.imageURL {
+            if let image = detailQuestionImage {
+                image.imageFromServerURL(urlString: imageURL)
+            }
+        }
+        
+        
     }
 
     override func viewDidLoad() {
@@ -33,14 +49,13 @@ class DetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    var detailItem: NSDate? {
+    var detailQuestion: Question? {
         didSet {
             // Update the view.
             configureView()
         }
     }
 
-    
 
 }
 

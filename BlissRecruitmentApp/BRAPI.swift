@@ -22,11 +22,11 @@ class BRAPI{
     
     func getHealth(success sBlock:@escaping (_ responseObject: [String:Any?])->(),
                    failure fBlock: @escaping (_ error: Error)->()) {
-        
+        //Request
         Alamofire.request("\(BRAPI.kHost)/health").validate().responseJSON { response in
             switch response.result {
             case .success:
-                print("Success")
+                print("Success - Healthy")
                 
                 sBlock(response.result.value as! [String : Any?])
             case .failure(let error):
@@ -38,4 +38,46 @@ class BRAPI{
         }
         
     }
+    
+    func getAllQuestions(_ limit:Int, _ offset:Int,_ filter:String?=nil,
+        success sBlock:@escaping (_ responseObject: [String:Any?])->(),
+        failure fBlock: @escaping (_ error: Error)->()
+        ) {
+        //Optional parameter
+        let filterParameter:String = (filter != nil ? "&\(filter!)" : "").addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+        //Request
+        Alamofire.request("\(BRAPI.kHost)/questions?\(limit)&\(offset)\(filterParameter)").validate().responseJSON { response in
+            switch response.result {
+            case .success:
+                print("Success - Received questions")
+                sBlock(["questions":response.result.value])
+            case .failure(let error):
+                print("Error")
+                print(error)
+                
+                fBlock(error)
+            }
+        }
+    }
+    
+    func getQuestion(_ number:Int,
+                     success sBlock:@escaping (_ responseObject: [String:Any?])->(),
+                     failure fBlock: @escaping (_ error: Error)->()
+        ){
+        
+        Alamofire.request("\(BRAPI.kHost)/questions/\(number)").validate().responseJSON { response in
+            switch response.result {
+            case .success:
+                print("Success - Received question")
+                sBlock(response.result.value as! [String:Any?])
+            case .failure(let error):
+                print("Error")
+                print(error)
+                
+                fBlock(error)
+            }
+        }
+        
+    }
+    
 }
