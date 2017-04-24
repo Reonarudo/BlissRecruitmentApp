@@ -100,5 +100,24 @@ class BRAPI{
         }
     }
     
+    func share(url toSend:String, with email:String,
+               success sBlock:@escaping (_ responseObject: [String:Any?])->(),
+               failure fBlock: @escaping (_ error: Error)->()
+        ) {
+        
+        Alamofire.request("\(BRAPI.kHost)/share?\(email)&\(toSend)", method:.post).validate().responseJSON { response in
+            switch response.result {
+            case .success:
+                print("Success - Shared")
+                sBlock(response.result.value as! [String:Any?])
+            case .failure(let error):
+                print("Error")
+                print(error)
+                
+                fBlock(error)
+            }
+        }
+        
+    }
     
 }

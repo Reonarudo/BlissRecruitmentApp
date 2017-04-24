@@ -239,6 +239,68 @@
             </objects>
             <point key="canvasLocation" x="-45" y="129"/>
         </scene>
+        <!--Share-->
+        <scene sceneID="KZz-cY-viz">
+            <objects>
+                <viewController title="Share" id="xWm-Xk-2ae" customClass="BRAShareViewController" customModule="BlissRecruitmentApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NLk-1Y-xCK"/>
+                        <viewControllerLayoutGuide type="bottom" id="N6j-pg-rzr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uaz-xc-et1">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share XYZ" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q9J-wi-mKB">
+                                <rect key="frame" x="40.5" y="64" width="240" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="zhz-eY-bJZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Destination email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pJn-EI-aS7">
+                                <rect key="frame" x="40.5" y="104" width="240" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kkg-1C-YPG">
+                                <rect key="frame" x="120" y="142" width="80" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="atX-En-Rls"/>
+                                    <constraint firstAttribute="height" constant="60" id="vn1-aP-hm6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="24"/>
+                                <state key="normal" title="Share"/>
+                                <connections>
+                                    <action selector="shareAction:" destination="xWm-Xk-2ae" eventType="touchUpInside" id="30T-nR-Nl3"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="pJn-EI-aS7" firstAttribute="width" secondItem="uaz-xc-et1" secondAttribute="width" multiplier="3/4" id="1I6-Fp-Adu"/>
+                            <constraint firstItem="pJn-EI-aS7" firstAttribute="centerX" secondItem="uaz-xc-et1" secondAttribute="centerX" id="F0d-MO-zKd"/>
+                            <constraint firstItem="q9J-wi-mKB" firstAttribute="width" secondItem="uaz-xc-et1" secondAttribute="width" multiplier="3/4" id="IJy-Jj-grQ"/>
+                            <constraint firstItem="pJn-EI-aS7" firstAttribute="top" secondItem="q9J-wi-mKB" secondAttribute="bottom" constant="8" id="Tiq-6g-0Au"/>
+                            <constraint firstItem="q9J-wi-mKB" firstAttribute="centerX" secondItem="uaz-xc-et1" secondAttribute="centerX" id="Zbq-n3-ty6"/>
+                            <constraint firstItem="Kkg-1C-YPG" firstAttribute="centerX" secondItem="uaz-xc-et1" secondAttribute="centerX" id="jFO-h2-2Fh"/>
+                            <constraint firstItem="Kkg-1C-YPG" firstAttribute="top" secondItem="pJn-EI-aS7" secondAttribute="bottom" constant="8" id="t9r-ay-gMk"/>
+                            <constraint firstItem="q9J-wi-mKB" firstAttribute="centerY" secondItem="uaz-xc-et1" secondAttribute="centerY" multiplier="1/3" id="tnQ-si-GBk"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="emailTextField" destination="pJn-EI-aS7" id="aBG-BI-daT"/>
+                        <outlet property="shareButton" destination="Kkg-1C-YPG" id="OSg-Tl-tge"/>
+                        <outlet property="titleLabel" destination="q9J-wi-mKB" id="e5p-k4-Qyp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GNp-2e-KFv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-45" y="971"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="6S0-TO-JiA"/>
