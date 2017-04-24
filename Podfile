@@ -8,4 +8,5 @@ target 'BlissRecruitmentApp' do
   # Pods for BlissRecruitmentApp
   pod 'Alamofire', '~> 4.4'
   pod 'KRProgressHUD'
+  pod 'ReachabilitySwift', '~> 3'
 end

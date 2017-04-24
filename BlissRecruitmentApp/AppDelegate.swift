@@ -7,6 +7,10 @@
 //
 
 import UIKit
+import KRProgressHUD
+import ReachabilitySwift
+
+let reachability = Reachability()!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -20,6 +24,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
         navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
         splitViewController.delegate = self
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(note:)),name: ReachabilityChangedNotification,object: reachability)
+        do{
+            try reachability.startNotifier()
+        }catch{
+            print("Could not start reachability notifier")
+        }
+        
         return true
     }
 
@@ -66,6 +78,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             return true
         }*/
         return true
+    }
+    
+    // MARK: - Reachability
+    
+    func reachabilityChanged(note: NSNotification) {
+        
+        let reachability = note.object as! Reachability
+        
+        if reachability.isReachable {
+            if reachability.isReachableViaWiFi {
+                print("Reachable via WiFi")
+            } else {
+                print("Reachable via Cellular")
+            }
+            KRProgressHUD.dismiss()
+        } else {
+            KRProgressHUD.show(message: "Can't reach the network...")
+            print("Network not reachable")
+        }
     }
 
 }

@@ -60,7 +60,7 @@ class BRAPI{
         }
     }
     
-    func getQuestion(_ number:Int,
+    func get(question number:Int,
                      success sBlock:@escaping (_ responseObject: [String:Any?])->(),
                      failure fBlock: @escaping (_ error: Error)->()
         ){
@@ -79,5 +79,26 @@ class BRAPI{
         }
         
     }
+    
+    func update(_ question:Question,
+                        success sBlock:@escaping (_ responseObject: [String:Any?])->(),
+                        failure fBlock: @escaping (_ error: Error)->()
+        ) {
+        
+        let body:Parameters = question.json()
+        Alamofire.request("\(BRAPI.kHost)/questions/\(question.id)", method:.put, parameters: body, encoding: JSONEncoding.default).validate().responseJSON { response in
+            switch response.result {
+            case .success:
+                print("Success - Updated question")
+                sBlock(response.result.value as! [String:Any?])
+            case .failure(let error):
+                print("Error")
+                print(error)
+                
+                fBlock(error)
+            }
+        }
+    }
+    
     
 }

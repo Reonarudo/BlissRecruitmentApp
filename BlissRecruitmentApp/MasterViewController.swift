@@ -62,6 +62,7 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
             self.questions=(response["questions"] as! Array<[String:Any?]>).flatMap{
                 Question.getQuestion(from: $0)
             }
+            self.tableView.reloadData()
         }) { (error) in
             print("Failed to fetch question batch")
         }
@@ -77,17 +78,7 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
         
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    /*
-     func insertNewObject(_ sender: Any) {
-     questions.insert(NSDate(), at: 0)
-     let indexPath = IndexPath(row: 0, section: 0)
-     tableView.insertRows(at: [indexPath], with: .automatic)
-     }
-     */
+
     // MARK: - Notifications handler
     
     func didRecieveQuestionNotification(notification: Notification){
@@ -120,7 +111,7 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
     
     //Show question
     func showQuestion(with number:Int) {
-        BRAPI.sharedInstance.getQuestion(number, success: { (result) in
+        BRAPI.sharedInstance.get(question: number, success: { (result) in
             self.linkQuestion=Question.getQuestion(from: result)
             self.performSegue(withIdentifier: "showDetail", sender: nil)
         }) { (error) in
@@ -159,6 +150,20 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
                 searchController.dismiss(animated: false, completion: nil)
             }
             
+        }else if segue.identifier == "shareFilterSegue" {
+            //Build sharable URL
+            let searchText:String=searchController.searchBar.text!
+            let escapedSearchText:String = searchText.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+            let searchURLToShare = "blissrecruitment://questions?question_filter=\(escapedSearchText)"
+            
+            let controller:BRAShareViewController = segue.destination as! BRAShareViewController
+            controller.shareTitle = "Share Question Filter"
+            controller.urlToShare = searchURLToShare
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+            //hide searchbar
+            searchController.dismiss(animated: false, completion: nil)
+
         }
     }
     
@@ -213,6 +218,7 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
                 }
             }
         }else{
+            //paging for question list (no filter)
             if(indexPath.row == (page*kQuestionsPerPage-1)){
                 BRAPI.sharedInstance.getAllQuestions(kQuestionsPerPage, page*kQuestionsPerPage, success: { (response) in
                     //append fetched questions
@@ -232,19 +238,6 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            questions.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-        }
-    }
     
     // MARK - Search delegate methods
     
@@ -253,7 +246,7 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
         self.filteredQuestions.removeAll()
         
         let searchText:String=searchController.searchBar.text!
-        
+        //Get filtered results
         BRAPI.sharedInstance.getAllQuestions(kQuestionsPerPage, 0, searchText, success: { (response) in
             self.filteredQuestions=(response["questions"] as! Array<[String:Any?]>).flatMap{
                 Question.getQuestion(from: $0)
@@ -272,21 +265,25 @@ class MasterViewController: UITableViewController, UISearchResultsUpdating, UISe
     
     func willDismissSearchController(_ searchController: UISearchController) {
         navigationItem.rightBarButtonItem = nil
-        self.tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        
+        if searchController.isActive ? filteredQuestions.count>0 : questions.count>0{
+            self.tableView.scrollToRow(at: IndexPath(item: 0, section: 0), at: .top, animated: true)
+        }else{
+            //Fetch initial content if current list is empty
+            BRAPI.sharedInstance.getAllQuestions(kQuestionsPerPage, 0, success: { (response) in
+                self.questions=(response["questions"] as! Array<[String:Any?]>).flatMap{
+                    Question.getQuestion(from: $0)
+                }
+            }) { (error) in
+                print("Failed to fetch question batch")
+            }
+        }
     }
     
     // MARK - Share
     func shareSearch() {
-        //Build sharable URL
-        let searchText:String=searchController.searchBar.text!
-        let escapedSearchText:String = searchText.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
-        let searchURLToShare = "blissrecruitment://questions?question_filter=\(escapedSearchText)"
-        
         //Present share screen
-        let activityViewController = UIActivityViewController(activityItems: [searchURLToShare], applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
-
-        self.present(activityViewController, animated: true, completion: nil)
+        self.performSegue(withIdentifier: "shareFilterSegue", sender: nil)
     }
 }
 
